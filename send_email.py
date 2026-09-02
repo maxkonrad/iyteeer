@@ -16,11 +16,14 @@ msg = EmailMessage()
 msg["Subject"] = "There is an update on İYTE EEE Department Website"
 msg["From"] = SENDER_EMAIL
 msg["To"] = RECEIVER_EMAIL
-msg.set_content("There is an update on the İYTE EEE Department website. Please check it out! https://eee.iyte.edu.tr")
 
-def send_email():
+def send_email(update_type, previous_content, current_content):
     try:
         with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            msg.set_content("There is an update on the İYTE EEE Department website. Please check it out! https://eee.iyte.edu.tr\n\n"
+                            f"Update Type: {update_type}\n"
+                            f"Previous Content: {previous_content}\n"
+                            f"Current Content: {current_content}")
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.send_message(msg)
             print("Email sent successfully!")

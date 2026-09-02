@@ -2,25 +2,11 @@ import bs4
 import requests
 import time
 import os
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from send_email import send_email
 from datetime import datetime, timezone, timedelta
 
 WEBSITE_URL = "https://eee.iyte.edu.tr"
 FILE_NAME = "previous_content.txt"
-
-class DummyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b"Sistem ayakta yorgun kral!")
-
-def run_dummy_server():
-    port = int(os.environ.get("PORT", 10000))
-    server = HTTPServer(('0.0.0.0', port), DummyHandler)
-    server.serve_forever()
 
 def main():
     print("Sistem çalışmaya başladı kral...")
@@ -69,5 +55,4 @@ def main():
         time.sleep(3600)
 
 if __name__ == "__main__":
-    threading.Thread(target=run_dummy_server, daemon=True).start()
     main()
