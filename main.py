@@ -31,10 +31,23 @@ def main():
             if len(lines) >= 3:
                 previous_etkinlikler, previous_haberler, previous_duyurular = lines[0], lines[1], lines[2]
 
-    if etkinlikler_text != previous_etkinlikler or haberler_text != previous_haberler or duyurular_text != previous_duyurular:
-        print("Yeni bir şeyler var dayı, maili ateşliyorum...")
-        send_email()
+    updated = False
+
+    # Her kategoriyi tek tek kontrol edip, değişenleri kendi parametreleriyle mail atıyoruz
+    if etkinlikler_text != previous_etkinlikler:
+        send_email("Etkinlikler", previous_etkinlikler, etkinlikler_text)
+        updated = True
         
+    if haberler_text != previous_haberler:
+        send_email("Haberler", previous_haberler, haberler_text)
+        updated = True
+        
+    if duyurular_text != previous_duyurular:
+        send_email("Duyurular", previous_duyurular, duyurular_text)
+        updated = True
+
+    if updated:
+        print("Yeni bir şeyler var dayı, mailleri ateşledim...")
         with open(FILE_NAME, "w", encoding="utf-8") as file:
             file.write(f"{etkinlikler_text}\n{haberler_text}\n{duyurular_text}")
     else:

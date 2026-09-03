@@ -9,23 +9,24 @@ SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASS")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 SMTP_SERVER = os.getenv("SMTP_SERVER")
-SMTP_PORT = int(os.getenv("SMTP_PORT"))
-
-
-msg = EmailMessage()
-msg["Subject"] = "There is an update on İYTE EEE Department Website"
-msg["From"] = SENDER_EMAIL
-msg["To"] = RECEIVER_EMAIL
+SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
 
 def send_email(update_type, previous_content, current_content):
     try:
+        # Mesaj objesi her çağrıldığında temiz ve yeni oluşturulmalı
+        msg = EmailMessage()
+        msg["Subject"] = f"İYTE EEE Güncellemesi: {update_type}"
+        msg["From"] = SENDER_EMAIL
+        msg["To"] = RECEIVER_EMAIL
+        
+        msg.set_content(f"İYTE EEE bölüm sitesinde bir güncelleme var!\nLink: https://eee.iyte.edu.tr\n\n"
+                        f"Kategori: {update_type}\n"
+                        f"Eski İçerik: {previous_content}\n"
+                        f"Yeni İçerik: {current_content}")
+        
         with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
-            msg.set_content("There is an update on the İYTE EEE Department website. Please check it out! https://eee.iyte.edu.tr\n\n"
-                            f"Update Type: {update_type}\n"
-                            f"Previous Content: {previous_content}\n"
-                            f"Current Content: {current_content}")
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.send_message(msg)
-            print("Email sent successfully!")
+            print(f"Email başarıyla gönderildi dayı: {update_type}")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"Mail gönderimi patladı hacı: {e}")
